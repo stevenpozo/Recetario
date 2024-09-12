@@ -6,21 +6,28 @@ const getAllUsers = async () => {
 };
 
 const getUserById = async (id) => {
-    const [rows] = await db.query('SELECT * FROM Users WHERE id = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM Users WHERE userID = ?', [id]);
     return rows[0];
 };
 
 const createUser = async (users) => {
-    const { Username, Email, Password, RegistrationDate, Role, Status } = users;
-    const result = await db.query('INSERT INTO Users (Username, Email, Password, RegistrationDate, Role, Status ) VALUES (?, ?, ?, ?, ?)', [Username, Email, Password, RegistrationDate, Role, Status ]);
+    const { Username, Email, Password, Role, Status } = users; // No necesitamos RegistrationDate
+    const result = await db.query(
+        'INSERT INTO Users (Username, Email, Password, Role, Status) VALUES (?, ?, ?, ?, ?)', 
+        [Username, Email, Password, Role, Status]
+    );
     return result[0].insertId;
 };
 
+
 const updateUser = async (id, users) => {
-    const { Username, Email, Password, RegistrationDate, Role, Status } = users;
-    await db.query('UPDATE Users SET Username = ?, Email = ?, Password = ?, RegistrationDate = ?, Role = ?, Status =?  WHERE UserID = ?', 
-    [Username, Email, Password, RegistrationDate, Role, Status, id]);
+    const { Username, Email, Password, Role, Status } = users; // Sin RegistrationDate
+    await db.query(
+        'UPDATE Users SET Username = ?, Email = ?, Password = ?, Role = ?, Status = ? WHERE UserID = ?', 
+        [Username, Email, Password, Role, Status, id]
+    );
 };
+
 
 
 const deleteUser = async (id) => {
